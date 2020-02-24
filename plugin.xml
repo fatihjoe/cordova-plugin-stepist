@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-stepist" version="0.0.2">
+    <name>Step Counter</name>
+    <author>Fatih YILMAZ</author>
+    <description>Cordova / PhoneGap Plugin for step counts and other information about the distance travelled.</description>
+    <keywords>cordova, core motion, pedometer, steps, distance, pedestrian</keywords>
+    <license>MIT</license>
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+    <js-module src="www/stepist.js" name="stepist">
+        <clobbers target="stepist" />
+    </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="StepIst">
+                <param name="ios-package" value="StepIst" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/StepIst.h" />
+        <source-file src="src/ios/StepIst.m" />
+        <framework src="CoreMotion.framework" />
+    </platform>
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="StepIst">
+                <param name="android-package" value="org.apache.cordova.stepist.StepIstListener" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/StepIstListener.java" target-dir="src/org/apache/cordova/stepist" />
+    </platform>
+</plugin>
