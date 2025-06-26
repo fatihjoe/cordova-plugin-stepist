@@ -36,6 +36,7 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.LocalDataPoint;
 import com.google.android.gms.fitness.data.LocalDataSet;
 import com.google.android.gms.fitness.data.LocalDataType;
+import com.google.android.gms.fitness.data.LocalField;
 import com.google.android.gms.fitness.request.LocalDataReadRequest;
 
 /**
@@ -102,7 +103,9 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
             LocalRecordingClient localRecordingClient  =  FitnessLocal.getLocalRecordingClient(cordova.getActivity());
 
-            if (ActivityCompat.checkSelfPermission(cordova.getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+            int permission = ActivityCompat.checkSelfPermission(cordova.getActivity(), Manifest.permission.ACTIVITY_RECOGNITION);
+
+            if (permission == PackageManager.PERMISSION_GRANTED) {
                 localRecordingClient.subscribe(LocalDataType.TYPE_STEP_COUNT_DELTA);
                 /*
                .addOnSuccessListener {
@@ -301,7 +304,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         float steps = 0;
 
         ZonedDateTime endTime = LocalDateTime.now().atZone(ZoneId.systemDefault());
-        ZonedDateTime startTime = endTime.minusMinutes(1);
+        ZonedDateTime startTime = endTime.minusDays(10);
 
         LocalDataReadRequest readRequest = new LocalDataReadRequest.Builder()
                 .aggregate(LocalDataType.TYPE_STEP_COUNT_DELTA)
@@ -312,6 +315,8 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                         TimeUnit.SECONDS
                 )
                 .build();
+
+        localRecordingClient = FitnessLocal.getLocalRecordingClient(cordova.getActivity());
 
         localRecordingClient.readData(readRequest)
                 .addOnSuccessListener(response -> {
@@ -360,12 +365,12 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
             Log.i(TAG, "\tType: " + dp.getDataType().getName());
             Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
             Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
-            for (Field field : dp.getDataType().getFields()) {
+            for (LocalField field : dp.getDataType().getFields()) {
                 Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
             }
 
     }
-
+/*
     void dumpDataSet(LocalDataSet dataSet) {
         Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
         for (DataPoint dp : dataSet.getDataPoints()) {
@@ -378,7 +383,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
             }
         }
     }
-
+*/
     private void setStatus(int status) {
         this.status = status;
     }
