@@ -28,4 +28,8 @@ stepist.prototype.queryData = function(onSuccess, onError, options) {
     exec(onSuccess, onError, "StepIst", "queryData", [options]);
 };
 
+stepist.prototype.recordingAPI = function(onSuccess, onError, options) {
+    exec(onSuccess, onError, "StepIst", "recordingAPI", [options]);
+};
+
 module.exports = new stepist();

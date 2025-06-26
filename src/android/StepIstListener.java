@@ -1,6 +1,10 @@
 package org.apache.cordova.stepist;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
@@ -11,24 +15,42 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import android.os.Handler;
+import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.fitness.FitnessLocal;
+import com.google.android.gms.fitness.LocalRecordingClient;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.LocalDataPoint;
+import com.google.android.gms.fitness.data.LocalDataSet;
+import com.google.android.gms.fitness.data.LocalDataType;
+import com.google.android.gms.fitness.request.LocalDataReadRequest;
 
 /**
  * This class listens to the pedometer sensor
  */
 public class StepIstListener extends CordovaPlugin implements SensorEventListener {
 
+    private  String TAG = "recording api";
+
     public static int STOPPED = 0;
     public static int STARTING = 1;
     public static int RUNNING = 2;
     public static int ERROR_FAILED_TO_START = 3;
     public static int ERROR_NO_SENSOR_FOUND = 4;
+    public static int RECORDING_API = 5;
 
     private int status;     // status of listener
     private float startsteps; //first value, to be substracted
@@ -40,6 +62,8 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
     private CallbackContext callbackContext; // Keeps track of the JS callback context.
 
     private Handler mainHandler=null;
+
+    private LocalRecordingClient localRecordingClient = null;
 
     /**
      * Constructor
@@ -73,6 +97,27 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         this.callbackContext = callbackContext;
+
+        if (action.equals("recordingAPI")) {
+
+            LocalRecordingClient localRecordingClient  =  FitnessLocal.getLocalRecordingClient(cordova.getActivity());
+
+            if (ActivityCompat.checkSelfPermission(cordova.getActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+                localRecordingClient.subscribe(LocalDataType.TYPE_STEP_COUNT_DELTA);
+                /*
+               .addOnSuccessListener {
+                    Log.i(TAG, "Successfully subscribed!")
+                }
+                .addOnFailureListener { e ->
+                        Log.w(TAG, "There was a problem subscribing.", e)
+                }
+                */
+
+                this.RecApi();
+                return true;
+            }
+            return false;
+        }
 
         if (action.equals("isStepCountingAvailable")) {
             List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_COUNTER);
@@ -110,7 +155,8 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
             }
             this.win(null);
             return true;
-        } else {
+        }
+         else {
             // Unsupported action
             return false;
         }
@@ -249,6 +295,88 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
+    }
+
+    private void RecApi() {
+        float steps = 0;
+
+        ZonedDateTime endTime = LocalDateTime.now().atZone(ZoneId.systemDefault());
+        ZonedDateTime startTime = endTime.minusMinutes(1);
+
+        LocalDataReadRequest readRequest = new LocalDataReadRequest.Builder()
+                .aggregate(LocalDataType.TYPE_STEP_COUNT_DELTA)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(
+                        startTime.toEpochSecond(),
+                        endTime.toEpochSecond(),
+                        TimeUnit.SECONDS
+                )
+                .build();
+
+        localRecordingClient.readData(readRequest)
+                .addOnSuccessListener(response -> {
+
+                    LocalDataSet localDataSet=  response.getDataSet(LocalDataType.TYPE_STEP_COUNT_DELTA);
+                    
+                    
+                    for (LocalDataPoint dataPoint : localDataSet.getDataPoints()) {
+                        dumpDataPoint(dataPoint);
+                    }
+
+
+
+/*
+                    for (Bucket bucket : response.getBuckets()) {
+                        for (DataSet dataSet : bucket.getDataSets()) {
+                            dumpDataSet(dataSet);
+                        }
+                    }
+                    */
+
+                })
+                .addOnFailureListener(e ->
+                        Log.w(TAG, "There was an error reading data", e)
+                );
+
+
+
+        JSONObject message = getStepsJSON(steps);
+        // Success return object
+
+        PluginResult result;
+        if(message != null)
+            result = new PluginResult(PluginResult.Status.OK, message);
+        else
+            result = new PluginResult(PluginResult.Status.OK);
+
+        result.setKeepCallback(true);
+        callbackContext.sendPluginResult(result);
+    }
+
+    void dumpDataPoint(LocalDataPoint dp) {
+
+
+            Log.i(TAG, "Data point:");
+            Log.i(TAG, "\tType: " + dp.getDataType().getName());
+            Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
+            Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
+            for (Field field : dp.getDataType().getFields()) {
+                Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
+            }
+
+    }
+
+    void dumpDataSet(LocalDataSet dataSet) {
+        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+        for (DataPoint dp : dataSet.getDataPoints()) {
+            Log.i(TAG, "Data point:");
+            Log.i(TAG, "\tType: " + dp.getDataType().getName());
+            Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
+            Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
+            for (Field field : dp.getDataType().getFields()) {
+                Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
+            }
+        }
     }
 
     private void setStatus(int status) {
