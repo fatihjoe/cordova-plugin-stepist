@@ -23,6 +23,15 @@
         <framework src="CoreMotion.framework" />
     </platform>
     <platform name="android">
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">            
+            <uses-permission android:name="android.permission.WAKE_LOCK"/>
+            <uses-permission android:name="android.permission.VIBRATE"/>
+            <uses-permission android:name="android.permission.BODY_SENSORS" />
+            <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
+            <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+        </config-file>
+
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="StepIst">
                 <param name="android-package" value="org.apache.cordova.stepist.StepIstListener" />
