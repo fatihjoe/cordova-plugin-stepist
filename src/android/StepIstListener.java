@@ -44,7 +44,7 @@ import com.google.android.gms.fitness.request.LocalDataReadRequest;
  */
 public class StepIstListener extends CordovaPlugin implements SensorEventListener {
 
-    private  String TAG = "recording api";
+    private String TAG = "recording api";
 
     public static int STOPPED = 0;
     public static int STARTING = 1;
@@ -62,9 +62,18 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
     private CallbackContext callbackContext; // Keeps track of the JS callback context.
 
-    private Handler mainHandler=null;
+    private Handler mainHandler = null;
 
     private LocalRecordingClient localRecordingClient = null;
+
+    /// ////////////////////////////////////////////////////////////////////////////
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private float previousSteps = 0.0f;
+    private long previousTime = 0;
+    private Sensor stepDetectorSensor;
+    private StepIstDetector stepIstDetector;
+    ///////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Constructor
@@ -86,45 +95,43 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         this.sensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
+        this.stepIstDetector = new StepIstDetector(cordova, webView);
+        this.stepIstDetector.setStarttimestamp(this.starttimestamp);
+        this.stepIstDetector.setStartsteps(this.startsteps);
     }
 
     /**
      * Executes the request.
      *
-     * @param action the action to execute.
-     * @param args the exec() arguments.
+     * @param action          the action to execute.
+     * @param args            the exec() arguments.
      * @param callbackContext the callback context used when calling back into JavaScript.
      * @return whether the action was valid.
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         this.callbackContext = callbackContext;
-
+        this.stepIstDetector.callbackContext = callbackContext;
         if (action.equals("recordingAPI")) {
-
-            LocalRecordingClient localRecordingClient  =  FitnessLocal.getLocalRecordingClient(cordova.getActivity());
-
-            int permission = ActivityCompat.checkSelfPermission(cordova.getActivity(), Manifest.permission.ACTIVITY_RECOGNITION);
-
-            if (permission == PackageManager.PERMISSION_GRANTED) {
-                localRecordingClient.subscribe(LocalDataType.TYPE_STEP_COUNT_DELTA);
-                /*
-               .addOnSuccessListener {
-                    Log.i(TAG, "Successfully subscribed!")
-                }
-                .addOnFailureListener { e ->
-                        Log.w(TAG, "There was a problem subscribing.", e)
-                }
-                */
-
-                this.RecApi();
+            String ar = Manifest.permission.ACTIVITY_RECOGNITION;
+            this.localRecordingClient = FitnessLocal.getLocalRecordingClient(cordova.getActivity());
+            if (cordova.getContext().checkSelfPermission(ar) == PackageManager.PERMISSION_GRANTED) {
+                Log.i(this.TAG, "izin verilmiş!");
+                RecApi();
                 return true;
             }
-            return false;
+            cordova.getActivity().requestPermissions(new String[]{ar}, 0);
+            Log.i(this.TAG, "izin yok!");
+            if (cordova.getContext().checkSelfPermission(ar) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+            Log.i(this.TAG, "izin verilmiş!");
+            RecApi();
+            return true;
         }
 
         if (action.equals("isStepCountingAvailable")) {
             List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_COUNTER);
-            if ((list != null) && (list.size() > 0)) {
+            if ((list != null) && (!list.isEmpty())) {
                 this.win(true);
                 return true;
             } else {
@@ -140,8 +147,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
             //floor counting is never available in Android
             this.win(false);
             return true;
-        }
-        else if (action.equals("startStepIstUpdates")) {
+        } else if (action.equals("startStepIstUpdates")) {
             if (this.status != StepIstListener.RUNNING) {
                 // If not running, then this is an async call, so don't worry about waiting
                 // We drop the callback onto our stack, call start, and let start and the sensor callback fire off the callback down the road
@@ -151,15 +157,13 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
             result.setKeepCallback(true);
             callbackContext.sendPluginResult(result);
             return true;
-        }
-        else if (action.equals("stopStepIstUpdates")) {
+        } else if (action.equals("stopStepIstUpdates")) {
             if (this.status == StepIstListener.RUNNING) {
                 this.stop();
             }
             this.win(null);
             return true;
-        }
-         else {
+        } else {
             // Unsupported action
             return false;
         }
@@ -200,7 +204,8 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                 this.setStatus(StepIstListener.ERROR_FAILED_TO_START);
                 this.fail(StepIstListener.ERROR_FAILED_TO_START, "Device sensor returned an error.");
                 return;
-            };
+            }
+            ;
         } else {
             this.setStatus(StepIstListener.ERROR_FAILED_TO_START);
             this.fail(StepIstListener.ERROR_FAILED_TO_START, "No sensors found to register step counter listening to.");
@@ -223,12 +228,13 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
      */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-      //nothing to do here
-      return;
+        //nothing to do here
+        return;
     }
 
     /**
      * Sensor listener event.
+     *
      * @param event
      */
     @Override
@@ -246,8 +252,8 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
         float steps = event.values[0];
 
-        if(this.startsteps == 0)
-          this.startsteps = steps;
+        if (this.startsteps == 0)
+            this.startsteps = steps;
 
         steps = steps - this.startsteps;
 
@@ -282,7 +288,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
     private void win(JSONObject message) {
         // Success return object
         PluginResult result;
-        if(message != null)
+        if (message != null)
             result = new PluginResult(PluginResult.Status.OK, message);
         else
             result = new PluginResult(PluginResult.Status.OK);
@@ -321,9 +327,9 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         localRecordingClient.readData(readRequest)
                 .addOnSuccessListener(response -> {
 
-                    LocalDataSet localDataSet=  response.getDataSet(LocalDataType.TYPE_STEP_COUNT_DELTA);
-                    
-                    
+                    LocalDataSet localDataSet = response.getDataSet(LocalDataType.TYPE_STEP_COUNT_DELTA);
+
+
                     for (LocalDataPoint dataPoint : localDataSet.getDataPoints()) {
                         dumpDataPoint(dataPoint);
                     }
@@ -344,12 +350,11 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                 );
 
 
-
         JSONObject message = getStepsJSON(steps);
         // Success return object
 
         PluginResult result;
-        if(message != null)
+        if (message != null)
             result = new PluginResult(PluginResult.Status.OK, message);
         else
             result = new PluginResult(PluginResult.Status.OK);
@@ -361,45 +366,73 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
     void dumpDataPoint(LocalDataPoint dp) {
 
 
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
-            Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
-            for (LocalField field : dp.getDataType().getFields()) {
-                Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
-            }
+        Log.i(TAG, "Data point:");
+        Log.i(TAG, "\tType: " + dp.getDataType().getName());
+        Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
+        Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
+        for (LocalField field : dp.getDataType().getFields()) {
+            Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
+        }
 
     }
-/*
-    void dumpDataSet(LocalDataSet dataSet) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
-        for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
-            Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
-            for (Field field : dp.getDataType().getFields()) {
-                Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
+
+    /*
+        void dumpDataSet(LocalDataSet dataSet) {
+            Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+            for (DataPoint dp : dataSet.getDataPoints()) {
+                Log.i(TAG, "Data point:");
+                Log.i(TAG, "\tType: " + dp.getDataType().getName());
+                Log.i(TAG, "\tStart: " + dp.getStartTime(TimeUnit.HOURS));
+                Log.i(TAG, "\tEnd: " + dp.getEndTime(TimeUnit.HOURS));
+                for (Field field : dp.getDataType().getFields()) {
+                    Log.i(TAG, "\tLocalField: " + field.getName() + " LocalValue: " + dp.getValue(field));
+                }
             }
         }
-    }
-*/
+    */
     private void setStatus(int status) {
         this.status = status;
     }
 
+    /*
+        private JSONObject getStepsJSON(float steps) {
+            JSONObject r = new JSONObject();
+            // pedometerData.startDate; -> ms since 1970
+            // pedometerData.endDate; -> ms since 1970
+            // pedometerData.numberOfSteps;
+            // pedometerData.distance;
+            // pedometerData.floorsAscended;
+            // pedometerData.floorsDescended;
+            try {
+                r.put("startDate", this.starttimestamp);
+                r.put("endDate", System.currentTimeMillis());
+                r.put("numberOfSteps", steps);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return r;
+        }
+    */
     private JSONObject getStepsJSON(float steps) {
         JSONObject r = new JSONObject();
-        // pedometerData.startDate; -> ms since 1970
-        // pedometerData.endDate; -> ms since 1970
-        // pedometerData.numberOfSteps;
-        // pedometerData.distance;
-        // pedometerData.floorsAscended;
-        // pedometerData.floorsDescended;
+        long currentTimeMillis = System.currentTimeMillis();
+        long timeDiff = currentTimeMillis - this.previousTime;
+        float stepDiff = steps - this.previousSteps;
+        float perMinute = 0.0f;
+        if (timeDiff > 0) {
+            perMinute = (60000.0f * stepDiff) / ((float) timeDiff);
+        }
+        this.previousSteps = steps;
+        this.previousTime = currentTimeMillis;
+        this.stepIstDetector.setCounterSensorResetSteps(steps);
         try {
             r.put("startDate", this.starttimestamp);
-            r.put("endDate", System.currentTimeMillis());
-            r.put("numberOfSteps", steps);
+            r.put("endDate", currentTimeMillis);
+            r.put("numberOfSteps", (double) steps);
+            r.put("stepDiff", (double) stepDiff);
+            r.put("timeDiff", timeDiff);
+            r.put("perMinute", (double) perMinute);
+            r.put("sensor", "stepCounterSensor");
         } catch (JSONException e) {
             e.printStackTrace();
         }
