@@ -1,6 +1,6 @@
 {
     "name": "cordova-plugin-stepist",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "author": "Fatih YILMAZ <fatih@fatihyilmaz.com> (http://fatihyilmaz.com)",
     "description": "Cordova / PhoneGap Plugin for the Step Counting (Pedometer).",
     "cordova": {
