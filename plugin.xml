@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-stepist" version="0.0.4">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-stepist" version="0.0.5">
     <name>Step Counter</name>
     <author>Fatih YILMAZ</author>
     <description>Cordova / PhoneGap Plugin for step counts and other information about the distance travelled.</description>
@@ -30,7 +30,39 @@
             <uses-permission android:name="android.permission.BODY_SENSORS" />
             <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
             <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
         </config-file>
+
+        <!-- AndroidManifest.xml'e izin ekle -->
+        <config-file target="AndroidManifest.xml" parent="manifest">
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        </config-file>
+
+        <!-- StepService tanımı -->
+        <config-file target="AndroidManifest.xml" parent="application">
+            <service android:name="org.apache.cordova.stepist.StepService" />
+        </config-file>
+
+        <!-- AlarmReceiver tanımı -->
+        <config-file target="AndroidManifest.xml" parent="application">
+            <receiver android:name="org.apache.cordova.stepist.AlarmReceiver" />
+        </config-file>
+
+        <!-- BootReceiver tanımı ve BOOT_COMPLETED filtrelemesi -->
+        <config-file target="AndroidManifest.xml" parent="application">
+            <receiver android:name="org.apache.cordova.stepist.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            </receiver>
+        </config-file>
+
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="StepIst">
@@ -38,6 +70,14 @@
             </feature>
         </config-file>
         <source-file src="src/android/StepIstListener.java" target-dir="src/org/apache/cordova/stepist" />
-        <source-file src="src/android/StepIstDetector.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/StepIstDetector.java" target-dir="src/org/apache/cordova/stepist" />        
+        <source-file src="src/android/StepCounterWorker.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/StepDbHelper.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/AlarmReceiver.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/BootReceiver.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/StepDatabaseHelper.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/StepService.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/TrackingService.java" target-dir="src/org/apache/cordova/stepist" />
+
     </platform>
 </plugin>
