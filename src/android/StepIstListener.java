@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.SpringLayout.Constraints;
+//import javax.swing.SpringLayout.Constraints;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
@@ -18,7 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.Manifest;
-import android.StepIstDetector;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -27,6 +28,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.content.Intent;
 
@@ -34,6 +36,10 @@ import android.os.Handler;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.gms.fitness.FitnessLocal;
 import com.google.android.gms.fitness.LocalRecordingClient;
@@ -127,7 +133,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                         .build())
                 .build();
 
-        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(activity.getApplicationContext()).enqueueUniquePeriodicWork(
                 "StepCounterWork",
                 ExistingPeriodicWorkPolicy.KEEP,
                 stepWorkRequest);
