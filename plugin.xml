@@ -37,6 +37,10 @@
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
+            <uses-permission android:name="android.permission.health.READ_STEPS" />
+            <uses-permission android:name="android.permission.health.WRITE_STEPS" />
+            <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
+
         </config-file>
 
         <!-- AndroidManifest.xml'e izin ekle -->
@@ -46,7 +50,7 @@
 
         <!-- StepService tanımı -->
         <config-file target="AndroidManifest.xml" parent="application">
-            <service android:name="org.apache.cordova.stepist.StepService" />
+            <service android:name="org.apache.cordova.stepist.StepService" android:exported="false"  />
         </config-file>
         
         <config-file target="AndroidManifest.xml" parent="application">
