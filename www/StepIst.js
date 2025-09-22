@@ -32,4 +32,8 @@ stepist.prototype.recordingAPI = function(onSuccess, onError, options) {
     exec(onSuccess, onError, "StepIst", "recordingAPI", [options]);
 };
 
+stepist.prototype.startNotificationTracking = function(onSuccess, onError, options) {
+    exec(onSuccess, onError, "StepIst", "startNotificationTracking", [options]);
+};
+
 module.exports = new stepist();

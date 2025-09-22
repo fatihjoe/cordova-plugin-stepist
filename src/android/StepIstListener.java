@@ -164,7 +164,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
             return true;
         }
 
-        if (action.equals("notifyService")) {
+        if (action.equals("startNotificationTracking")) {
 
             Intent serviceIntent = new Intent(cordova.getActivity(), TrackingService.class);
             ContextCompat.startForegroundService(cordova.getActivity(), serviceIntent);

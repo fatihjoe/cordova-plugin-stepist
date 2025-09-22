@@ -48,6 +48,10 @@
         <config-file target="AndroidManifest.xml" parent="application">
             <service android:name="org.apache.cordova.stepist.StepService" />
         </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="application">
+            <service android:name="org.apache.cordova.stepist.TrackingService" android:foregroundServiceType="location" android:exported="false" />
+        </config-file>
 
         <!-- AlarmReceiver tanımı -->
         <config-file target="AndroidManifest.xml" parent="application">
