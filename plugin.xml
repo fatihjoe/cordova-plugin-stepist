@@ -59,15 +59,15 @@
 
         <!-- AlarmReceiver tanımı -->
         <config-file target="AndroidManifest.xml" parent="application">
-            <receiver android:name="org.apache.cordova.stepist.AlarmReceiver" />
+            <receiver android:name="org.apache.cordova.stepist.AlarmReceiver" android:exported="false" />
         </config-file>
 
         <!-- BootReceiver tanımı ve BOOT_COMPLETED filtrelemesi -->
         <config-file target="AndroidManifest.xml" parent="application">
-            <receiver android:name="org.apache.cordova.stepist.BootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
+            <receiver android:name="org.apache.cordova.stepist.BootReceiver" android:exported="false">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                </intent-filter>
             </receiver>
         </config-file>
 
