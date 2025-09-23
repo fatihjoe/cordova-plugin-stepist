@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/icon"
         android:text="Sesli uyarı kapalı"
-        android:textColor="#000"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp" />
 
     <Switch
@@ -27,7 +27,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="0dp"
         android:checked="false"
-        android:enabled="false" />
+        android:enabled="true" />
 
     <TextView
         android:id="@+id/text_location"
@@ -37,7 +37,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Konum: Bilinmiyor"
-        android:textColor="#000"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp" />
 
     <TextView
@@ -47,7 +47,7 @@
         android:layout_below="@id/text_location"
         android:layout_marginStart="8dp"
         android:text="Adımlar: 0"
-        android:textColor="#000"
+        android:textColor="?android:textColorPrimary"
         android:textSize="14sp" />
 
 </RelativeLayout>
