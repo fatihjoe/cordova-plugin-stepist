@@ -87,6 +87,10 @@
         <source-file src="src/android/StepDatabaseHelper.java" target-dir="src/org/apache/cordova/stepist" />
         <source-file src="src/android/StepService.java" target-dir="src/org/apache/cordova/stepist" />
         <source-file src="src/android/TrackingService.java" target-dir="src/org/apache/cordova/stepist" />
+        
+        <resource-file src="src/android/res/layout/notificationscreen.xml" target="res/layout/notificationscreen.xml" />
+        <resource-file src="src/android/res/drawable/icon.png" target="res/drawable/icon.png" />
+
 
     </platform>
 </plugin>

@@ -17,11 +17,15 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.widget.RemoteViews;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+
+import ist.hmg.nutrigpt.R;
 
 public class TrackingService extends Service implements SensorEventListener {
 
@@ -52,16 +56,32 @@ public class TrackingService extends Service implements SensorEventListener {
     }
 
     private Notification createNotification(String locationText, int steps) {
-        NotificationChannel channel = new NotificationChannel("track_channel", "Tracking", NotificationManager.IMPORTANCE_LOW);
+
+        Context context = getApplicationContext();
+        //Context context = cordova.getActivity().getApplicationContext();
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notificationscreen);
+        remoteViews.setTextViewText(R.id.text_location, locationText);
+        remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
+
+        NotificationChannel channel = new NotificationChannel("track_channel", "Tracking", NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(channel);
 
-        return new NotificationCompat.Builder(this, "track_channel")
-                .setContentTitle("SSS Plus Takip Aktif")
-                .setContentText(locationText + " | Adımlar: " + steps)
-                //.setSmallIcon(R.drawable.ic_walk)
+        Notification notification = new NotificationCompat.Builder(context, "track_channel")
+                .setSmallIcon(R.drawable.icon)
+                .setCustomContentView(remoteViews)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setOngoing(true)
                 .build();
+
+        //return new NotificationCompat.Builder(this, "track_channel")
+        //        .setContentTitle("SSS Plus Takip Aktif")
+        //        .setContentText(locationText + " | Adımlar: " + steps)
+        //        .setSmallIcon(context.getApplicationInfo().icon)
+        //        .setOngoing(true)
+        //        .build();
+
+        return notification;
     }
 
     private final LocationListener locationListener = new LocationListener() {

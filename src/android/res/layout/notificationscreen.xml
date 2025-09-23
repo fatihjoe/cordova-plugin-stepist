@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:padding="12dp"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_mute" />
+
+    <TextView
+        android:id="@+id/text_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/icon"
+        android:layout_marginStart="8dp"
+        android:text="Sesli uyarı kapalı"
+        android:textColor="#000"
+        android:textSize="14sp" />
+
+    <Switch
+        android:id="@+id/switch_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:checked="false"
+        android:enabled="false" />
+
+    <TextView
+        android:id="@+id/text_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switch_mute"
+        android:layout_marginStart="8dp"
+        android:text="Konum: Bilinmiyor"
+        android:textColor="#000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/text_steps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_location"
+        android:layout_marginStart="8dp"
+        android:text="Adımlar: 0"
+        android:textColor="#000"
+        android:textSize="14sp" />
+
+</RelativeLayout>
