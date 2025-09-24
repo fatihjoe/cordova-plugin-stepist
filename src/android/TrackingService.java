@@ -59,8 +59,13 @@ public class TrackingService extends Service implements SensorEventListener {
 
         Context context = getApplicationContext();
         //Context context = cordova.getActivity().getApplicationContext();
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notificationscreen);
-        remoteViews.setTextViewText(R.id.text_location, locationText);
+        //RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notificationscreen);
+        //remoteViews.setTextViewText(R.id.text_location, locationText);
+        //remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
+
+
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_fitness_status);
+        //remoteViews.setTextViewText(R.id.text_location, locationText);
         remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
 
         NotificationChannel channel = new NotificationChannel("track_channel", "Tracking", NotificationManager.IMPORTANCE_DEFAULT);

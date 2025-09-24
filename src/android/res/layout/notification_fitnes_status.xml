@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fitness_notification"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@color/notificationBackground">
+
+    <!-- Speed and Time Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="space_between">
+
+        <TextView
+            android:id="@+id/text_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hız: 0.0 km/s"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_elapsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Geçen Süre: 00:00 dk"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Remaining Time and Distance -->
+    <TextView
+        android:id="@+id/text_remaining_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kalan Süre: 00:00 dk"
+        android:textColor="@color/notificationText"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/text_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alınan Mesafe: 0 m"
+        android:textColor="@color/notificationText"
+        android:textSize="14sp"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/text_remaining_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kalan Mesafe: 800 m"
+        android:textColor="@color/notificationText"
+        android:textSize="14sp"
+        android:layout_marginTop="2dp" />
+
+    <!-- Steps and Calories -->
+    <TextView
+        android:id="@+id/text_steps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adım Sayısı: 0 adım"
+        android:textColor="@color/notificationText"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/text_calories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Harcanan Kalori: 0 kcal"
+        android:textColor="@color/notificationText"
+        android:textSize="14sp"
+        android:layout_marginTop="2dp" />
+</LinearLayout>
