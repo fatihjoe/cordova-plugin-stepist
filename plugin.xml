@@ -92,6 +92,7 @@
         <resource-file src="src/android/res/layout/notification_fitness_status.xml" target="res/layout/notification_fitness_status.xml" />
         <resource-file src="src/android/res/values/colors.xml" target="res/values/colors.xml" />
         <resource-file src="src/android/res/values-night/colors.xml" target="res/values-night/colors.xml" />
+        <resource-file src="src/android/res/values/strings.xml" target="res/values-night/strings.xml" />
         <resource-file src="src/android/res/drawable/icon.png" target="res/drawable/icon.png" />
 
 
