@@ -89,6 +89,9 @@
         <source-file src="src/android/TrackingService.java" target-dir="src/org/apache/cordova/stepist" />
         
         <resource-file src="src/android/res/layout/notificationscreen.xml" target="res/layout/notificationscreen.xml" />
+        <resource-file src="src/android/res/layout/notification_fitness_status.xml" target="res/layout/notification_fitness_status.xml" />
+        <resource-file src="src/android/res/values/colors.xml" target="res/values/colors.xml" />
+        <resource-file src="src/android/res/values-night/colors.xml" target="res/values-night/colors.xml" />
         <resource-file src="src/android/res/drawable/icon.png" target="res/drawable/icon.png" />
 
 
