@@ -29,7 +29,7 @@
             android:id="@+id/text_elapsed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/stepist_foreground_notification_info_elapsed"
+            android:text="@string/stepist_foreground_notification_info_time_elapsed"
             android:textColor="@color/notificationText"
             android:textSize="14sp" />
 
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/stepist_foreground_notification_info_remaining_time"
+            android:text="@string/stepist_foreground_notification_info_time_remaining"
             android:textColor="@color/notificationText"
             android:textSize="14sp" />
     </LinearLayout>

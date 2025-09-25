@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="plugin_name">Stepist Plugin(pedometer)</string>
     <string name="stepist_foreground_notification_buttons_start">Start</string>
@@ -9,6 +9,8 @@
     <string name="stepist_foreground_notification_text">Counting your steps...</string>
     <string name="stepist_foreground_notification_subtext">Provided by Stepist</string>
     <string name="stepist_foreground_notification_info_speed">Speed: %1$.2f km/h</string>
+    <string name="stepist_foreground_notification_info_time_elapsed">Elapsed Time: %1$.2f min</string>
+    <string name="stepist_foreground_notification_info_time_remaining">Remaining Time: %1$.2f min</string>
     <string name="stepist_foreground_notification_info_distance">Distance: %1$.2f km</string>
     <string name="stepist_foreground_notification_info_distance_taken">Distance Taken: %1$.2f km</string>
     <string name="stepist_foreground_notification_info_distance_remaining">Distance Remaining: %1$.2f km</string>
