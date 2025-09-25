@@ -33,6 +33,15 @@ public class TrackingService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor stepSensor;
     private int stepCount = 0;
+    private int distanceTaken = 0;
+    private int distanceRemaining = 0;
+    private float speed = 0.0f;
+    private int calories = 0;
+    private int time_elapsed = 0;
+    private int time_remaining = 0;
+    private int floors_ascended = 0;
+    private int floors_descended = 0;
+
 
     @Override
     public void onCreate() {
@@ -63,10 +72,25 @@ public class TrackingService extends Service implements SensorEventListener {
         //remoteViews.setTextViewText(R.id.text_location, locationText);
         //remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
 
+        String _steps = String.valueOf(R.string.stepist_foreground_notification_info_steps);
+        String _speed = String.valueOf(R.string.stepist_foreground_notification_info_speed);
+        String _elapsed = String.valueOf(R.string.stepist_foreground_notification_info_time_elapsed);
+        String _remaining = String.valueOf(R.string.stepist_foreground_notification_info_time_remaining);
+        String _distance = String.valueOf(R.string.stepist_foreground_notification_info_distance);
+        String _remaining_distance = String.valueOf(R.string.stepist_foreground_notification_info_distance_remaining);
+        String _calories = String.valueOf(R.string.stepist_foreground_notification_info_calories);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_fitness_status);
         //remoteViews.setTextViewText(R.id.text_location, locationText);
-        remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
+        remoteViews.setTextViewText(R.id.text_steps, String.format(_steps, steps));
+        //remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
+
+        remoteViews.setTextViewText(R.id.text_speed, String.format(_speed, speed));
+        remoteViews.setTextViewText(R.id.text_elapsed, String.format(_elapsed, time_elapsed));
+        remoteViews.setTextViewText(R.id.text_remaining_time, String.format(_remaining, time_remaining));
+        remoteViews.setTextViewText(R.id.text_distance, String.format(_distance, distanceTaken));
+        remoteViews.setTextViewText(R.id.text_remaining_distance, String.format(_remaining_distance, distanceRemaining));
+        remoteViews.setTextViewText(R.id.text_calories, String.format(_calories, calories));
 
         NotificationChannel channel = new NotificationChannel("track_channel", "Tracking", NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager manager = getSystemService(NotificationManager.class);
