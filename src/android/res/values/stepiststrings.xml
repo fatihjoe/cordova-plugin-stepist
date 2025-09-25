@@ -1,4 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="plugin_name">Stepist Plugin(pedometer)</string>
+    <string name="stepist_foreground_notification_buttons_start">Başlat</string>
+    <string name="stepist_foreground_notification_buttons_stop">Durdur</string>
+    <string name="stepist_foreground_notification_buttons_pause">Ara Ver</string>
+    <string name="stepist_foreground_notification_buttons_resume">Devam Et</string>
+    <string name="stepist_foreground_notification_title">Adım Sayacı</string>
+    <string name="stepist_foreground_notification_text">Adımlarınız sayılıyor...</string>
+    <string name="stepist_foreground_notification_subtext">Stepist tarafından sağlanır</string>
+    <string name="stepist_foreground_notification_info_speed">Hız: %1$.2f km/s</string>
+    <string name="stepist_foreground_notification_info_distance">Mesafe: %1$.2f km</string>
+    <string name="stepist_foreground_notification_info_distance_taken">Alınan Mesafe: %1$.2f km</string>
+    <string name="stepist_foreground_notification_info_distance_remaining">Kalan Mesafe: %1$.2f km</string>
+    <string name="stepist_foreground_notification_info_steps">Adımlar: %1$d adım</string>
+    <string name="stepist_foreground_notification_info_calories">Kalori: %1$.2f kcal</string>
+    <string name="stepist_foreground_notification_info_pace">Tempo: %1$.2f dk/km</string>
+    <string name="stepist_foreground_notification_info_floors_ascended">Çıkılan Kat: %1$d kat</string>  
+    <string name="stepist_foreground_notification_info_floors_descended">İnilen Kat: %1$d kat</string>    
 </resources>

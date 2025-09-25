@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="12dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
     android:background="@color/notificationBackground">
 
     <!-- Speed and Time Row -->
@@ -18,7 +21,7 @@
             android:id="@+id/text_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hız: 0.0 km/s"
+            android:text="@string/stepist_foreground_notification_info_speed"
             android:textColor="@color/notificationText"
             android:textSize="14sp" />
 
@@ -26,55 +29,104 @@
             android:id="@+id/text_elapsed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Geçen Süre: 00:00 dk"
+            android:text="@string/stepist_foreground_notification_info_elapsed"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_remaining_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/stepist_foreground_notification_info_remaining_time"
             android:textColor="@color/notificationText"
             android:textSize="14sp" />
     </LinearLayout>
-
-    <!-- Remaining Time and Distance -->
-    <TextView
-        android:id="@+id/text_remaining_time"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kalan Süre: 00:00 dk"
-        android:textColor="@color/notificationText"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp" />
+        android:orientation="horizontal"
+        android:gravity="fill_horizontal">
 
-    <TextView
-        android:id="@+id/text_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alınan Mesafe: 0 m"
-        android:textColor="@color/notificationText"
-        android:textSize="14sp"
-        android:layout_marginTop="2dp" />
+        <!-- Remaining Time and Distance -->
 
-    <TextView
-        android:id="@+id/text_remaining_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kalan Mesafe: 800 m"
-        android:textColor="@color/notificationText"
-        android:textSize="14sp"
-        android:layout_marginTop="2dp" />
+        <TextView
+            android:id="@+id/text_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stepist_foreground_notification_info_distance_taken"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp" />
 
-    <!-- Steps and Calories -->
-    <TextView
-        android:id="@+id/text_steps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Adım Sayısı: 0 adım"
-        android:textColor="@color/notificationText"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:id="@+id/text_remaining_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stepist_foreground_notification_info_distance_remaining"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_calories"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Harcanan Kalori: 0 kcal"
-        android:textColor="@color/notificationText"
-        android:textSize="14sp"
-        android:layout_marginTop="2dp" />
+        android:orientation="horizontal"
+        android:gravity="fill_horizontal">
+
+        <!-- Steps and Calories -->
+        <TextView
+            android:id="@+id/text_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stepist_foreground_notification_info_steps"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/text_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stepist_foreground_notification_info_calories"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stepist_foreground_notification_buttons_start" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stepist_foreground_notification_buttons_stop" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stepist_foreground_notification_buttons_pause" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stepist_foreground_notification_buttons_resume" />
+    </LinearLayout>
+
 </LinearLayout>

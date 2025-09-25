@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="plugin_name">Stepist Plugin(pedometer)</string>
+    <string name="stepist_foreground_notification_buttons_start">Start</string>
+    <string name="stepist_foreground_notification_buttons_stop">Stop</string>
+    <string name="stepist_foreground_notification_buttons_pause">Pause</string>
+    <string name="stepist_foreground_notification_buttons_resume">Resume</string>
+    <string name="stepist_foreground_notification_title">Step Counter</string>
+    <string name="stepist_foreground_notification_text">Counting your steps...</string>
+    <string name="stepist_foreground_notification_subtext">Provided by Stepist</string>
+    <string name="stepist_foreground_notification_info_speed">Speed: %1$.2f km/h</string>
+    <string name="stepist_foreground_notification_info_distance">Distance: %1$.2f km</string>
+    <string name="stepist_foreground_notification_info_distance_taken">Distance Taken: %1$.2f km</string>
+    <string name="stepist_foreground_notification_info_distance_remaining">Distance Remaining: %1$.2f km</string>
+    <string name="stepist_foreground_notification_info_steps">Steps: %1$d steps</string>
+    <string name="stepist_foreground_notification_info_calories">Calories: %1$.2f kcal</string>
+    <string name="stepist_foreground_notification_info_pace">Pace: %1$.2f min/km</string>
+    <string name="stepist_foreground_notification_info_floors_ascended">Floors Ascended: %1$d floors</string>
+    <string name="stepist_foreground_notification_info_floors_descended">Floors Descended: %1$d floors</string>
+</resources>
