@@ -42,7 +42,6 @@ public class TrackingService extends Service implements SensorEventListener {
     private int floors_ascended = 0;
     private int floors_descended = 0;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -67,32 +66,36 @@ public class TrackingService extends Service implements SensorEventListener {
     private Notification createNotification(String locationText, int steps) {
 
         Context context = getApplicationContext();
-        //Context context = cordova.getActivity().getApplicationContext();
-        //RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notificationscreen);
-        //remoteViews.setTextViewText(R.id.text_location, locationText);
-        //remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
+        // Context context = cordova.getActivity().getApplicationContext();
+        // RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+        // R.layout.notificationscreen);
+        // remoteViews.setTextViewText(R.id.text_location, locationText);
+        // remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
 
-        String _steps = String.valueOf(R.string.stepist_foreground_notification_info_steps);
-        String _speed = String.valueOf(R.string.stepist_foreground_notification_info_speed);
-        String _elapsed = String.valueOf(R.string.stepist_foreground_notification_info_time_elapsed);
-        String _remaining = String.valueOf(R.string.stepist_foreground_notification_info_time_remaining);
-        String _distance = String.valueOf(R.string.stepist_foreground_notification_info_distance);
-        String _remaining_distance = String.valueOf(R.string.stepist_foreground_notification_info_distance_remaining);
-        String _calories = String.valueOf(R.string.stepist_foreground_notification_info_calories);
+        String _steps = context.getString(R.string.stepist_foreground_notification_info_steps);
+        String _speed = context.getString(R.string.stepist_foreground_notification_info_speed);
+        String _elapsed = context.getString(R.string.stepist_foreground_notification_info_time_elapsed);
+        String _remaining = context.getString(R.string.stepist_foreground_notification_info_time_remaining);
+        String _distance = context.getString(R.string.stepist_foreground_notification_info_distance);
+        String _remaining_distance = context
+                .getString(R.string.stepist_foreground_notification_info_distance_remaining);
+        String _calories = context.getString(R.string.stepist_foreground_notification_info_calories);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_fitness_status);
-        //remoteViews.setTextViewText(R.id.text_location, locationText);
+        // remoteViews.setTextViewText(R.id.text_location, locationText);
         remoteViews.setTextViewText(R.id.text_steps, String.format(_steps, steps));
-        //remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
+        // remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
 
         remoteViews.setTextViewText(R.id.text_speed, String.format(_speed, speed));
         remoteViews.setTextViewText(R.id.text_elapsed, String.format(_elapsed, time_elapsed));
         remoteViews.setTextViewText(R.id.text_remaining_time, String.format(_remaining, time_remaining));
         remoteViews.setTextViewText(R.id.text_distance, String.format(_distance, distanceTaken));
-        remoteViews.setTextViewText(R.id.text_remaining_distance, String.format(_remaining_distance, distanceRemaining));
+        remoteViews.setTextViewText(R.id.text_remaining_distance,
+                String.format(_remaining_distance, distanceRemaining));
         remoteViews.setTextViewText(R.id.text_calories, String.format(_calories, calories));
 
-        NotificationChannel channel = new NotificationChannel("track_channel", "Tracking", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel("track_channel", "Tracking",
+                NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager manager = getSystemService(NotificationManager.class);
         manager.createNotificationChannel(channel);
 
@@ -103,12 +106,12 @@ public class TrackingService extends Service implements SensorEventListener {
                 .setOngoing(true)
                 .build();
 
-        //return new NotificationCompat.Builder(this, "track_channel")
-        //        .setContentTitle("SSS Plus Takip Aktif")
-        //        .setContentText(locationText + " | Adımlar: " + steps)
-        //        .setSmallIcon(context.getApplicationInfo().icon)
-        //        .setOngoing(true)
-        //        .build();
+        // return new NotificationCompat.Builder(this, "track_channel")
+        // .setContentTitle("SSS Plus Takip Aktif")
+        // .setContentText(locationText + " | Adımlar: " + steps)
+        // .setSmallIcon(context.getApplicationInfo().icon)
+        // .setOngoing(true)
+        // .build();
 
         return notification;
     }
@@ -123,13 +126,15 @@ public class TrackingService extends Service implements SensorEventListener {
     private void updateNotification(Location location, int steps) {
         String locText = "Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude();
         Notification notification = createNotification(locText, steps);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
+            // ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
+            // public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            // int[] grantResults)
+            // to handle the case where the user grants the permission. See the
+            // documentation
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
@@ -140,13 +145,17 @@ public class TrackingService extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
             stepCount = (int) event.values[0];
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
+                // ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
+                // public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                // int[] grantResults)
+                // to handle the case where the user grants the permission. See the
+                // documentation
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
@@ -154,6 +163,12 @@ public class TrackingService extends Service implements SensorEventListener {
         }
     }
 
-    @Override public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-    @Override public IBinder onBind(Intent intent) { return null; }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }
