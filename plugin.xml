@@ -93,6 +93,7 @@
         <resource-file src="src/android/res/values/stepistcolors.xml" target="res/values/stepistcolors.xml" />
         <resource-file src="src/android/res/values-night/stepistcolors.xml" target="res/values-night/stepistcolors.xml" />
         <resource-file src="src/android/res/values/stepiststrings.xml" target="res/values/stepiststrings.xml" />
+        <resource-file src="src/android/res/values-en/stepiststrings.xml" target="res/values-en/stepiststrings.xml" />
         <resource-file src="src/android/res/drawable/icon.png" target="res/drawable/icon.png" />
 
 
