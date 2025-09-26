@@ -76,7 +76,7 @@ public class TrackingService extends Service implements SensorEventListener {
         String _speed = context.getString(R.string.stepist_foreground_notification_info_speed);
         String _elapsed = context.getString(R.string.stepist_foreground_notification_info_time_elapsed);
         String _remaining = context.getString(R.string.stepist_foreground_notification_info_time_remaining);
-        String _distance = context.getString(R.string.stepist_foreground_notification_info_distance);
+        String _distance = context.getString(R.string.stepist_foreground_notification_info_distance_taken);
         String _remaining_distance = context
                 .getString(R.string.stepist_foreground_notification_info_distance_remaining);
         String _calories = context.getString(R.string.stepist_foreground_notification_info_calories);
