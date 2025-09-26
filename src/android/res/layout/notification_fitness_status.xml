@@ -10,12 +10,22 @@
     android:paddingBottom="0dp"
     android:background="@color/notificationBackground">
 
-    <!-- Speed and Time Row -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="fill_horizontal">
+
+        <!-- Steps and Calories -->
+        <TextView
+            android:id="@+id/text_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stepist_foreground_notification_info_steps"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/text_speed"
@@ -24,6 +34,22 @@
             android:text="@string/stepist_foreground_notification_info_speed"
             android:textColor="@color/notificationText"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stepist_foreground_notification_info_calories"
+            android:textColor="@color/notificationText"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="fill_horizontal">
 
         <TextView
             android:id="@+id/text_elapsed"
@@ -42,6 +68,7 @@
             android:textColor="@color/notificationText"
             android:textSize="14sp" />
     </LinearLayout>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,32 +91,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stepist_foreground_notification_info_distance_remaining"
-            android:textColor="@color/notificationText"
-            android:textSize="14sp"
-            android:layout_marginTop="2dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="fill_horizontal">
-
-        <!-- Steps and Calories -->
-        <TextView
-            android:id="@+id/text_steps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stepist_foreground_notification_info_steps"
-            android:textColor="@color/notificationText"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
-
-        <TextView
-            android:id="@+id/text_calories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stepist_foreground_notification_info_calories"
             android:textColor="@color/notificationText"
             android:textSize="14sp"
             android:layout_marginTop="2dp" />
