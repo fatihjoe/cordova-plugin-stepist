@@ -44,31 +44,7 @@ public class TrackingService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // API 34
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[] { Manifest.permission.FOREGROUND_SERVICE_LOCATION },
-                        REQUEST_FOREGROUND_LOCATION_PERMISSION);
-            } else {
-                // İzin zaten verilmiş
-                try {
-                    startForeground(1, createNotification("Konum alınıyor...", 0));
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            // Daha düşük API'lerde bu izne gerek yok
-            try {
-                startForeground(1, createNotification("Konum alınıyor...", 0));
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-        }
+        super.onCreate();        
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);

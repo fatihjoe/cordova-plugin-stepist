@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.Manifest;
+import android.StepIstDetector;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,7 +27,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -56,6 +56,8 @@ import com.google.android.gms.fitness.request.LocalDataReadRequest;
  * This class listens to the pedometer sensor
  */
 public class StepIstListener extends CordovaPlugin implements SensorEventListener {
+
+    private static final int REQUEST_FOREGROUND_LOCATION_PERMISSION = 1001;
 
     private String TAG = "recording api";
 
@@ -171,6 +173,33 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         }
 
         if (action.equals("startNotificationTracking")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // API 34
+
+                Context context = getApplicationContext();
+
+                if (ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(context,
+                            new String[] { Manifest.permission.FOREGROUND_SERVICE_LOCATION },
+                            REQUEST_FOREGROUND_LOCATION_PERMISSION);
+                } else {
+                    // İzin zaten verilmiş
+                    try {
+                        startForeground(1, createNotification("Konum alınıyor...", 0));
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                // Daha düşük API'lerde bu izne gerek yok
+                try {
+                    startForeground(1, createNotification("Konum alınıyor...", 0));
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
 
             Intent serviceIntent = new Intent(cordova.getActivity(), TrackingService.class);
             ContextCompat.startForegroundService(cordova.getActivity(), serviceIntent);
