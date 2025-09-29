@@ -17,8 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import StepIstDetector;
+
 import android.Manifest;
-import android.StepIstDetector;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -181,23 +182,20 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                 if (ContextCompat.checkSelfPermission(context,
                         Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(context,
+                    ActivityCompat.requestPermissions(cordova.getActivity(),
                             new String[] { Manifest.permission.FOREGROUND_SERVICE_LOCATION },
                             REQUEST_FOREGROUND_LOCATION_PERMISSION);
                 } else {
                     // İzin zaten verilmiş
                     try {
-                        startForeground(1, createNotification("Konum alınıyor...", 0));
+
+                        Intent serviceIntent = new Intent(cordova.getActivity(), TrackingService.class);
+                        ContextCompat.startForegroundService(cordova.getActivity(), serviceIntent);
+
+                        return true;
                     } catch (SecurityException e) {
                         e.printStackTrace();
                     }
-                }
-            } else {
-                // Daha düşük API'lerde bu izne gerek yok
-                try {
-                    startForeground(1, createNotification("Konum alınıyor...", 0));
-                } catch (SecurityException e) {
-                    e.printStackTrace();
                 }
             }
 
