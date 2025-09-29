@@ -17,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import StepIstDetector;
+import org.apache.cordova.stepist.StepIstDetector;
 
 import android.Manifest;
 import android.app.AlarmManager;
@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.content.Intent;
 
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
@@ -177,7 +178,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // API 34
 
-                Context context = getApplicationContext();
+                Context context = cordova.getContext();
 
                 if (ContextCompat.checkSelfPermission(context,
                         Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
