@@ -44,27 +44,27 @@ public class TrackingService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
-        super.onCreate();        
+        super.onCreate();
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // API 34
-                Context context = getApplicationContext();
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    // İzin zaten verilmiş
-                    try {
-                        startForeground(1, createNotification("Konum alınıyor...", 0));
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                // Daha düşük API'lerde bu izne gerek yok
+            Context context = getApplicationContext();
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // İzin zaten verilmiş
                 try {
                     startForeground(1, createNotification("Konum alınıyor...", 0));
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 }
             }
+        } else {
+            // Daha düşük API'lerde bu izne gerek yok
+            try {
+                startForeground(1, createNotification("Konum alınıyor...", 0));
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -99,6 +99,8 @@ public class TrackingService extends Service implements SensorEventListener {
                 .getString(R.string.stepist_foreground_notification_info_distance_remaining);
         String _calories = context.getString(R.string.stepist_foreground_notification_info_calories);
 
+        RemoteViews remoteViewSmall = new RemoteViews(context.getPackageName(), R.layout.notificationscreen);
+
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_fitness_status);
         // remoteViews.setTextViewText(R.id.text_location, locationText);
         remoteViews.setTextViewText(R.id.text_steps, String.format(_steps, steps));
@@ -119,9 +121,11 @@ public class TrackingService extends Service implements SensorEventListener {
 
         Notification notification = new NotificationCompat.Builder(context, "track_channel")
                 .setSmallIcon(R.drawable.icon)
-                .setCustomContentView(remoteViews)
+                .setCustomContentView(remoteViewSmall)
+                .setCustomBigContentView(remoteViews)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setOngoing(true)
+                .setOnlyAlertOnce(true)
                 .build();
 
         // return new NotificationCompat.Builder(this, "track_channel")
@@ -166,7 +170,7 @@ public class TrackingService extends Service implements SensorEventListener {
             if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 // ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -196,7 +200,7 @@ public class TrackingService extends Service implements SensorEventListener {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             // ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding

@@ -96,6 +96,10 @@
         <resource-file src="src/android/res/values/stepiststrings.xml" target="res/values/stepiststrings.xml" />
         <resource-file src="src/android/res/values-en/stepiststrings.xml" target="res/values-en/stepiststrings.xml" />
         <resource-file src="src/android/res/drawable/icon.png" target="res/drawable/icon.png" />
+        <resource-file src="src/android/res/drawable/sound_onx256.png" target="res/drawable/sound_onx256.png" />
+        <resource-file src="src/android/res/drawable/sound_offx256.png" target="res/drawable/sound_offx256.png" />
+        <resource-file src="src/android/res/drawable/sound_onx48.png" target="res/drawable/sound_onx48.png" />
+        <resource-file src="src/android/res/drawable/sound_offx48.png" target="res/drawable/sound_offx48.png" />
 
 
     </platform>
