@@ -15,7 +15,7 @@ public class StepDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE steps (id INTEGER PRIMARY KEY AUTOINCREMENT, count INTEGER, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
+        db.execSQL("CREATE TABLE  IF NOT EXISTS  steps (id INTEGER PRIMARY KEY AUTOINCREMENT, count INTEGER, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
     }
 
     @Override
@@ -23,6 +23,9 @@ public class StepDatabaseHelper extends SQLiteOpenHelper {
 
     public void insertStep(int count) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("CREATE TABLE  IF NOT EXISTS  steps (id INTEGER PRIMARY KEY AUTOINCREMENT, count INTEGER, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
+
         ContentValues values = new ContentValues();
         values.put("count", count);
         db.insert("steps", null, values);

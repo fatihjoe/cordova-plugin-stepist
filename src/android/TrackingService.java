@@ -1,6 +1,7 @@
 package org.apache.cordova.stepist;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,6 +9,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,6 +19,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.speech.tts.TextToSpeech;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -25,9 +29,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.Locale;
+
 import ist.hmg.nutrigpt.R;
 
 public class TrackingService extends Service implements SensorEventListener {
+
+    public static final String STEPIST_CHANNEL_ID = "stepist_foreground_service_channel";
+    public static final int STEPIST_NOTIFICATION_ID = 443351;
+
+    private TextToSpeech tts;
 
     private LocationManager locationManager;
     private SensorManager sensorManager;
@@ -45,7 +56,6 @@ public class TrackingService extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // API 34
             Context context = getApplicationContext();
@@ -66,6 +76,13 @@ public class TrackingService extends Service implements SensorEventListener {
             }
         }
 
+        // TextToSpeech başlat
+        tts = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                tts.setLanguage(new Locale("tr", "TR"));
+            }
+        });
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -79,6 +96,7 @@ public class TrackingService extends Service implements SensorEventListener {
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
     }
 
     private Notification createNotification(String locationText, int steps) {
@@ -100,8 +118,24 @@ public class TrackingService extends Service implements SensorEventListener {
         String _calories = context.getString(R.string.stepist_foreground_notification_info_calories);
 
         RemoteViews remoteViewSmall = new RemoteViews(context.getPackageName(), R.layout.notificationscreen);
-
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_fitness_status);
+
+        remoteViews.setOnClickPendingIntent(R.id.button1, getPendingIntent(context, "org.apache.cordova.stepist.BUTTON1_CLICKED"));
+        remoteViews.setOnClickPendingIntent(R.id.button2, getPendingIntent(context, "org.apache.cordova.stepist.BUTTON2_CLICKED"));
+        remoteViews.setOnClickPendingIntent(R.id.button3, getPendingIntent(context, "org.apache.cordova.stepist.BUTTON3_CLICKED"));
+        remoteViews.setOnClickPendingIntent(R.id.button4, getPendingIntent(context, "org.apache.cordova.stepist.BUTTON4_CLICKED"));
+
+        remoteViewSmall.setOnClickPendingIntent(R.id.smallViewSoundIcon, getPendingIntent(context, "org.apache.cordova.stepist.smallViewSoundIcon"));
+
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        //    RemoteViews.RemoteResponse remoteResponse = RemoteViews.RemoteResponse.fromPendingIntent(getPendingIntent(context, "org.apache.cordova.stepist.BUTTON3_CLICKED"));
+        //    remoteViews.setOnClickResponse(R.id.button1, remoteResponse);
+        //}
+
+
+        remoteViewSmall.setTextViewText(R.id.text_smallView_location, locationText);
+        remoteViewSmall.setTextViewText(R.id.text_smallView_steps, String.format(_steps, steps));
+
         // remoteViews.setTextViewText(R.id.text_location, locationText);
         remoteViews.setTextViewText(R.id.text_steps, String.format(_steps, steps));
         // remoteViews.setTextViewText(R.id.text_steps, "Adımlar: " + steps);
@@ -114,12 +148,13 @@ public class TrackingService extends Service implements SensorEventListener {
                 String.format(_remaining_distance, distanceRemaining));
         remoteViews.setTextViewText(R.id.text_calories, String.format(_calories, calories));
 
-        NotificationChannel channel = new NotificationChannel("track_channel", "Tracking",
-                NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(STEPIST_CHANNEL_ID, "Tracking", NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager manager = getSystemService(NotificationManager.class);
-        manager.createNotificationChannel(channel);
+        if (manager.getNotificationChannel(STEPIST_CHANNEL_ID) == null) {
+            manager.createNotificationChannel(channel);
+        }
 
-        Notification notification = new NotificationCompat.Builder(context, "track_channel")
+        Notification notification = new NotificationCompat.Builder(context, STEPIST_CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon)
                 .setCustomContentView(remoteViewSmall)
                 .setCustomBigContentView(remoteViews)
@@ -128,7 +163,7 @@ public class TrackingService extends Service implements SensorEventListener {
                 .setOnlyAlertOnce(true)
                 .build();
 
-        // return new NotificationCompat.Builder(this, "track_channel")
+        // return new NotificationCompat.Builder(this, STEPIST_CHANNEL_ID)
         // .setContentTitle("SSS Plus Takip Aktif")
         // .setContentText(locationText + " | Adımlar: " + steps)
         // .setSmallIcon(context.getApplicationInfo().icon)
@@ -142,11 +177,15 @@ public class TrackingService extends Service implements SensorEventListener {
         @Override
         public void onLocationChanged(@NonNull Location location) {
             updateNotification(location, stepCount);
+
+            Context context = getApplicationContext();
+            //speak(  "konumunuz değişti");
+
         }
     };
 
     private void updateNotification(Location location, int steps) {
-        String locText = "Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude();
+        String locText = String.format("Lat: %1$.2f", location.getLatitude()) + String.format(", Lon: %1$.2f", location.getLongitude());//""Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude();
         Notification notification = createNotification(locText, steps);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -160,7 +199,7 @@ public class TrackingService extends Service implements SensorEventListener {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        NotificationManagerCompat.from(this).notify(1, notification);
+        NotificationManagerCompat.from(this).notify(STEPIST_NOTIFICATION_ID, notification);
     }
 
     @Override
@@ -182,6 +221,8 @@ public class TrackingService extends Service implements SensorEventListener {
                 return;
             }
             updateNotification(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER), stepCount);
+
+            speak(  "Adım sayınız "+stepCount);
         }
     }
 
@@ -213,6 +254,31 @@ public class TrackingService extends Service implements SensorEventListener {
         }
         updateNotification(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER), stepCount);
 
+        Context context = getApplicationContext();
+        speak(  "Adım sayınız "+stepCount);
+
+
     }
+
+    private PendingIntent getPendingIntent(Context context, String action) {
+        Intent intent = new Intent(context, NotificationActionReceiver.class);
+        intent.setAction(action);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        return pendingIntent;
+    }
+
+    private void speak(String text) {
+        if (tts != null) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
+
 
 }

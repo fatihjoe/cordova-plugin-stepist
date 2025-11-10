@@ -14,7 +14,7 @@
     <string name="stepist_foreground_notification_info_distance">Mesafe: %1$.3f km</string>
     <string name="stepist_foreground_notification_info_distance_taken">Alınan Mesafe: %1$d m</string>
     <string name="stepist_foreground_notification_info_distance_remaining">Kalan Mesafe: %1$d m</string>
-    <string name="stepist_foreground_notification_info_steps">Adımlar: %1$d adım</string>
+    <string name="stepist_foreground_notification_info_steps">Adımlar: %1$d</string>
     <string name="stepist_foreground_notification_info_calories">Kalori: %1$d kcal</string>
     <string name="stepist_foreground_notification_info_pace">Tempo: %1$.2f dk/km</string>
     <string name="stepist_foreground_notification_info_floors_ascended">Çıkılan Kat: %1$d kat</string>  

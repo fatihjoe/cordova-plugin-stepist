@@ -21,7 +21,7 @@ public class StepService extends Service implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if (stepSensor != null) {
-            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
 

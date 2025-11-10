@@ -1,6 +1,6 @@
 {
     "name": "cordova-plugin-stepist",
-    "version": "0.0.4",
+    "version": "0.1.0",
     "author": "Fatih YILMAZ <fatih@fatihyilmaz.com> (http://fatihyilmaz.com)",
     "description": "Cordova / PhoneGap Plugin for the Step Counting (Pedometer).",
     "cordova": {
@@ -21,9 +21,23 @@
         "cordova-ios",
         "cordova-android"
     ],
-    "engines": [{
-        "name": "cordova",
-        "version": ">=3.0.0"
-    }],
-    "license": "MIT"
+    "engines": [
+        {
+            "name": "cordova",
+            "version": ">=3.0.0"
+        }
+    ],
+    "license": "MIT",
+    "main": " ",
+    "scripts": {
+        "test": " "
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fatihjoe/cordova-plugin-stepist.git"
+    },
+    "bugs": {
+        "url": "https://github.com/fatihjoe/cordova-plugin-stepist/issues"
+    },
+    "homepage": "https://github.com/fatihjoe/cordova-plugin-stepist#readme"
 }
