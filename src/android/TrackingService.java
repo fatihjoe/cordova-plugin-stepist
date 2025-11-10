@@ -125,7 +125,7 @@ public class TrackingService extends Service implements SensorEventListener {
         remoteViews.setOnClickPendingIntent(R.id.button3, getPendingIntent(context, "org.apache.cordova.stepist.BUTTON3_CLICKED"));
         remoteViews.setOnClickPendingIntent(R.id.button4, getPendingIntent(context, "org.apache.cordova.stepist.BUTTON4_CLICKED"));
 
-        remoteViewSmall.setOnClickPendingIntent(R.id.smallViewSoundIcon, getPendingIntent(context, "org.apache.cordova.stepist.smallViewSoundIcon"));
+        remoteViewSmall.setOnClickPendingIntent(R.id.imageView, getPendingIntent(context, "org.apache.cordova.stepist.smallViewSoundIcon"));
 
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         //    RemoteViews.RemoteResponse remoteResponse = RemoteViews.RemoteResponse.fromPendingIntent(getPendingIntent(context, "org.apache.cordova.stepist.BUTTON3_CLICKED"));
@@ -133,8 +133,8 @@ public class TrackingService extends Service implements SensorEventListener {
         //}
 
 
-        remoteViewSmall.setTextViewText(R.id.text_smallView_location, locationText);
-        remoteViewSmall.setTextViewText(R.id.text_smallView_steps, String.format(_steps, steps));
+        remoteViewSmall.setTextViewText(R.id.text_location, locationText);
+        remoteViewSmall.setTextViewText(R.id.text_steps, String.format(_steps, steps));
 
         // remoteViews.setTextViewText(R.id.text_location, locationText);
         remoteViews.setTextViewText(R.id.text_steps, String.format(_steps, steps));
