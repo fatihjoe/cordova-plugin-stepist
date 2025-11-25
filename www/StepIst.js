@@ -25,5 +25,7 @@ stepist.prototype.setMaxSpeedLimitForWarning = function (onSuccess, onError, opt
 stepist.prototype.setMinSpeedLimitForWarning = function (onSuccess, onError, options) { exec(onSuccess, onError, "StepIst", "min_speed_limit_for_warning", [options]); };
 
 
+stepist.prototype.updateSetting = function (success, error, key, value) { exec(success, error, 'StepIst', 'updateSetting', [key, value]); };
+stepist.prototype.getSetting = function (success, error, key) { exec(success, error, 'StepIst', 'getSetting', [key]); };
 
 module.exports = new stepist();

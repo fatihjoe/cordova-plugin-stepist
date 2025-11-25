@@ -1,5 +1,6 @@
 package org.apache.cordova.stepist;
 
+import static org.apache.cordova.stepist.StepIstListener.STEPIST_SOUND_ON;
 import static org.apache.cordova.stepist.StepIstListener.STEPIST_SOUND_RERMINDER_FREQUENCY;
 import static org.apache.cordova.stepist.StepIstListener.STEPIST_SOUND_RERMINDER_LAST_TIMESTAMP;
 
@@ -21,14 +22,16 @@ public class SpeakService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String message = intent.getStringExtra("message");
-        if((System.currentTimeMillis()-STEPIST_SOUND_RERMINDER_LAST_TIMESTAMP)>= ((long) STEPIST_SOUND_RERMINDER_FREQUENCY *60*1000)){
-            tts = new TextToSpeech(this, status -> {
-                if (status == TextToSpeech.SUCCESS) {
-                    tts.setLanguage(new Locale("tr", "TR"));
-                    tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, "speakId");
-                }
-            });
-            STEPIST_SOUND_RERMINDER_LAST_TIMESTAMP = System.currentTimeMillis();
+        if(STEPIST_SOUND_ON==1){
+            if((System.currentTimeMillis()-STEPIST_SOUND_RERMINDER_LAST_TIMESTAMP)>= ((long) STEPIST_SOUND_RERMINDER_FREQUENCY *60*1000)){
+                tts = new TextToSpeech(this, status -> {
+                    if (status == TextToSpeech.SUCCESS) {
+                        tts.setLanguage(new Locale("tr", "TR"));
+                        tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, "speakId");
+                    }
+                });
+                STEPIST_SOUND_RERMINDER_LAST_TIMESTAMP = System.currentTimeMillis();
+            }
         }
 
         // Servisi kısa süre sonra durdur

@@ -31,6 +31,7 @@ import android.hardware.SensorManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import android.content.Intent;
 
 import android.os.Build;
@@ -164,11 +165,31 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         this.callbackContext = callbackContext;
         this.stepIstDetector.callbackContext = callbackContext;
 
-        if (action.equals("audible_warning")) { setAudibleWarning(args);return true;        }
-        if (action.equals("audible_reminder_frequency")) { setAudibleReminderFrequency(args);return true;        }
-        if (action.equals("max_speed_limit_for_warning")) { setMaxSpeedLimitForWarning(args);return true;        }
-        if (action.equals("min_speed_limit_for_warning")) { setMinSpeedLimitForWarning(args);return true;        }
+        if (action.equals("audible_warning")) {
+            setAudibleWarning(args);
+            return true;
+        }
+        if (action.equals("audible_reminder_frequency")) {
+            setAudibleReminderFrequency(args);
+            return true;
+        }
+        if (action.equals("max_speed_limit_for_warning")) {
+            setMaxSpeedLimitForWarning(args);
+            return true;
+        }
+        if (action.equals("min_speed_limit_for_warning")) {
+            setMinSpeedLimitForWarning(args);
+            return true;
+        }
 
+        switch (action) {
+            case "updateSetting":
+                updateSetting(args, callbackContext);
+                return true;
+            case "getSetting":
+                getSetting(args, callbackContext);
+                return true;
+        }
 
         if (action.equals("recordingAPI")) {
             String ar = Manifest.permission.ACTIVITY_RECOGNITION;
@@ -178,7 +199,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                 RecApi();
                 return true;
             }
-            cordova.getActivity().requestPermissions(new String[] { ar }, 0);
+            cordova.getActivity().requestPermissions(new String[]{ar}, 0);
             Log.i(this.TAG, "izin yok!");
             if (cordova.getContext().checkSelfPermission(ar) != PackageManager.PERMISSION_GRANTED) {
                 return false;
@@ -198,7 +219,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
                         Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions(cordova.getActivity(),
-                            new String[] { Manifest.permission.FOREGROUND_SERVICE_LOCATION },
+                            new String[]{Manifest.permission.FOREGROUND_SERVICE_LOCATION},
                             REQUEST_FOREGROUND_LOCATION_PERMISSION);
                 } else {
                     // İzin zaten verilmiş
@@ -480,7 +501,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         this.status = status;
     }
 
-    private void setAudibleWarning(final JSONArray args){
+    private void setAudibleWarning(final JSONArray args) {
         try {
             if (!args.getJSONObject(0).has("audible_warning")) {
                 callbackContext.error("Missing argument audible_warning");
@@ -491,7 +512,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
             STEPIST_SOUND_ON = audible_warning;
 
-            Log.d(TAG, "STEPIST_SOUND_ON : "+STEPIST_SOUND_ON);
+            Log.d(TAG, "STEPIST_SOUND_ON : " + STEPIST_SOUND_ON);
 
         } catch (JSONException ex) {
             Log.e(TAG, "Could not parse query object or write response object", ex);
@@ -499,7 +520,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         }
     }
 
-    private void setAudibleReminderFrequency(final JSONArray args){
+    private void setAudibleReminderFrequency(final JSONArray args) {
         try {
             if (!args.getJSONObject(0).has("audible_reminder_frequency")) {
                 callbackContext.error("Missing argument audible_reminder_frequency");
@@ -510,7 +531,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
             STEPIST_SOUND_RERMINDER_FREQUENCY = audible_reminder_frequency;
 
-            Log.d(TAG, "STEPIST_SOUND_ON : "+STEPIST_SOUND_RERMINDER_FREQUENCY);
+            Log.d(TAG, "STEPIST_SOUND_ON : " + STEPIST_SOUND_RERMINDER_FREQUENCY);
 
         } catch (JSONException ex) {
             Log.e(TAG, "Could not parse query object or write response object", ex);
@@ -518,7 +539,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         }
     }
 
-    private void setMaxSpeedLimitForWarning(final JSONArray args){
+    private void setMaxSpeedLimitForWarning(final JSONArray args) {
         try {
             if (!args.getJSONObject(0).has("max_speed_limit_for_warning")) {
                 callbackContext.error("Missing argument max_speed_limit_for_warning");
@@ -529,7 +550,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
             STEPIST_MAX_SPEED_LIMIT_FOR_WARNING = max_speed_limit_for_warning;
 
-            Log.d(TAG, "STEPIST_SOUND_ON : "+STEPIST_SOUND_RERMINDER_FREQUENCY);
+            Log.d(TAG, "STEPIST_SOUND_ON : " + STEPIST_SOUND_RERMINDER_FREQUENCY);
 
         } catch (JSONException ex) {
             Log.e(TAG, "Could not parse query object or write response object", ex);
@@ -537,7 +558,7 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
         }
     }
 
-    private void setMinSpeedLimitForWarning(final JSONArray args){
+    private void setMinSpeedLimitForWarning(final JSONArray args) {
         try {
             if (!args.getJSONObject(0).has("min_speed_limit_for_warning")) {
                 callbackContext.error("Missing argument min_speed_limit_for_warning");
@@ -548,13 +569,38 @@ public class StepIstListener extends CordovaPlugin implements SensorEventListene
 
             STEPIST_MIN_SPEED_LIMIT_FOR_WARNING = min_speed_limit_for_warning;
 
-            Log.d(TAG, "STEPIST_SOUND_ON : "+STEPIST_SOUND_RERMINDER_FREQUENCY);
+            Log.d(TAG, "STEPIST_SOUND_ON : " + STEPIST_SOUND_RERMINDER_FREQUENCY);
 
         } catch (JSONException ex) {
             Log.e(TAG, "Could not parse query object or write response object", ex);
             callbackContext.error("Could not parse query object or write response object");
         }
     }
+
+    private void updateSetting(final JSONArray args, CallbackContext callbackContext) {
+        SettingsDatabaseHelper dbHelper = new SettingsDatabaseHelper(cordova.getContext());
+        try {
+            String key = args.getString(0);
+            String value = args.getString(1);
+
+            dbHelper.updateField(key, value);
+            callbackContext.success("Updated " + key);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void getSetting(final JSONArray args, CallbackContext callbackContext) {
+        SettingsDatabaseHelper dbHelper = new SettingsDatabaseHelper(cordova.getContext());
+        try {
+            String key = args.getString(0);
+            String value = dbHelper.getField(key);
+            callbackContext.success(value);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     /*
      * private JSONObject getStepsJSON(float steps) {

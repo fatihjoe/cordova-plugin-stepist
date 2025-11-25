@@ -89,6 +89,9 @@
                 <param name="android-package" value="org.apache.cordova.stepist.StepIstListener" />
             </feature>
         </config-file>
+
+
+        
         <source-file src="src/android/StepIstListener.java" target-dir="src/org/apache/cordova/stepist" />
         <source-file src="src/android/StepIstDetector.java" target-dir="src/org/apache/cordova/stepist" />        
         <source-file src="src/android/StepCounterWorker.java" target-dir="src/org/apache/cordova/stepist" />
@@ -99,7 +102,9 @@
         <source-file src="src/android/StepService.java" target-dir="src/org/apache/cordova/stepist" />
         <source-file src="src/android/TrackingService.java" target-dir="src/org/apache/cordova/stepist" />
         <source-file src="src/android/SpeakService.java" target-dir="src/org/apache/cordova/stepist" />
-        <source-file src="src/android/NotificationActionReceiver.java" target-dir="src/org/apache/cordova/stepist" />
+        <source-file src="src/android/NotificationActionReceiver.java" target-dir="src/org/apache/cordova/stepist" />        
+        <source-file src="src/android/SettingsDatabaseHelper.java" target-dir="src/org/apache/cordova/stepist" />        
+        <source-file src="src/android/SettingsModel.java" target-dir="src/org/apache/cordova/stepist" />
         
         <resource-file src="src/android/res/layout/notificationscreen.xml" target="res/layout/notificationscreen.xml" />
         <resource-file src="src/android/res/layout/notification_fitness_status.xml" target="res/layout/notification_fitness_status.xml" />

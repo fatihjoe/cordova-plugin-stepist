@@ -1,5 +1,7 @@
 package org.apache.cordova.stepist;
 
+import static org.apache.cordova.stepist.StepIstListener.STEPIST_SOUND_ON;
+
 import android.Manifest;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -185,7 +187,11 @@ public class TrackingService extends Service implements SensorEventListener {
     };
 
     private void updateNotification(Location location, int steps) {
-        String locText = String.format("Lat: %1$.2f", location.getLatitude()) + String.format(", Lon: %1$.2f", location.getLongitude());//""Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude();
+        String locText = "";
+        if (location != null) {
+            locText = String.format("Lat: %1$.2f", location.getLatitude()) + String.format(", Lon: %1$.2f", location.getLongitude());//""Lat: " + location.getLatitude() + ", Lon: " + location.getLongitude();
+        }
+
         Notification notification = createNotification(locText, steps);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -222,7 +228,7 @@ public class TrackingService extends Service implements SensorEventListener {
             }
             updateNotification(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER), stepCount);
 
-            speak(  "Adım sayınız "+stepCount);
+            speak("Adım sayınız " + stepCount);
         }
     }
 
@@ -255,7 +261,7 @@ public class TrackingService extends Service implements SensorEventListener {
         updateNotification(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER), stepCount);
 
         Context context = getApplicationContext();
-        speak(  "Adım sayınız "+stepCount);
+        speak("Adım sayınız " + stepCount);
 
 
     }
@@ -275,8 +281,10 @@ public class TrackingService extends Service implements SensorEventListener {
     }
 
     private void speak(String text) {
-        if (tts != null) {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        if (STEPIST_SOUND_ON == 1) {
+            if (tts != null) {
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
         }
     }
 
